@@ -15,11 +15,23 @@ class AutoLogin
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (!\Illuminate\Support\Facades\Auth::check()) {
-            $user = \App\Models\User::first();
-            if ($user) {
-                \Illuminate\Support\Facades\Auth::login($user);
+        try {
+            if (!\Illuminate\Support\Facades\Auth::check()) {
+                $user = \App\Models\User::first();
+                if (!$user) {
+                    $user = \App\Models\User::create([
+                        'name' => 'Auto Admin',
+                        'email' => 'admin@water.system',
+                        'password' => \Illuminate\Support\Facades\Hash::make('password123'),
+                        'email_verified_at' => now(),
+                    ]);
+                }
+                if ($user) {
+                    \Illuminate\Support\Facades\Auth::login($user);
+                }
             }
+        } catch (\Exception $e) {
+            // Avoid crashing if database is not migrated yet
         }
         return $next($request);
     }
