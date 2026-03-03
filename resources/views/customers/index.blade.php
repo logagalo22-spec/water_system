@@ -59,6 +59,13 @@
                                             >
                                                 Edit
                                             </flux:menu.item>
+                                            <flux:menu.item
+                                                :href="route('billing.create', ['customer_id' => $customer->id])"
+                                                icon="document-plus"
+                                                wire:navigate
+                                            >
+                                                Add Water Usage
+                                            </flux:menu.item>
                                             <flux:menu.separator />
                                             <flux:menu.item
                                                 icon="trash"

@@ -18,7 +18,7 @@
                         >
                             <option value="">Select Customer</option>
                             @foreach ($customers as $customer)
-                                <option value="{{ $customer->id }}" data-type="{{ $customer->type }}" {{ old('customer_id') == $customer->id ? 'selected' : '' }}>
+                                <option value="{{ $customer->id }}" data-type="{{ $customer->type }}" {{ old('customer_id', request('customer_id')) == $customer->id ? 'selected' : '' }}>
                                     {{ $customer->name }} ({{ $customer->customer_id }}) - {{ $customer->type }}
                                 </option>
                             @endforeach

@@ -3,6 +3,10 @@
         <div class="flex items-center justify-between mb-6">
             <flux:heading>{{ $customer->name }}</flux:heading>
             <div class="flex gap-2">
+                <flux:button :href="route('billing.create', ['customer_id' => $customer->id])" variant="subtle" wire:navigate>
+                    <flux:icon icon="document-plus" variant="micro" />
+                    Add Water Usage
+                </flux:button>
                 <flux:button :href="route('customers.edit', $customer)" variant="primary" wire:navigate>
                     <flux:icon icon="pencil" variant="micro" />
                     Edit
