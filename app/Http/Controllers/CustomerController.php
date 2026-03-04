@@ -11,7 +11,16 @@ class CustomerController extends Controller
     public function index(): View
     {
         $customers = Customer::paginate(15);
-        return view('customers.index', compact('customers'));
+        $totalCustomers = Customer::count();
+        $activeCustomers = Customer::where('status', 'active')->count();
+        
+        // Get customer growth data for the chart
+        $customerGrowth = Customer::selectRaw("strftime('%Y-%m', created_at) as month, COUNT(*) as count")
+            ->groupBy('month')
+            ->orderBy('month', 'asc')
+            ->get();
+
+        return view('customers.index', compact('customers', 'totalCustomers', 'activeCustomers', 'customerGrowth'));
     }
 
     public function create(): View
@@ -22,13 +31,16 @@ class CustomerController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'customer_id' => 'required|unique:customers',
             'name' => 'required|string',
             'type' => 'required|in:Regular,Commercial',
             'email' => 'required|email|unique:customers',
-            'phone' => 'required|string',
             'address' => 'required|string',
         ]);
+
+        // Auto-generate customer ID if not provided, format as 1001, 1002 etc.
+        $nextId = (Customer::max('id') ?? 1000) + 1;
+        $validated['customer_id'] = sprintf('%d', $nextId);
+        $validated['phone'] = $request->input('phone', 'N/A');
 
         $customer = Customer::create($validated);
 
@@ -71,13 +83,13 @@ class CustomerController extends Controller
     public function update(Request $request, Customer $customer)
     {
         $validated = $request->validate([
-            'customer_id' => 'required|unique:customers,customer_id,' . $customer->id,
             'name' => 'required|string',
             'type' => 'required|in:Regular,Commercial',
             'email' => 'required|email|unique:customers,email,' . $customer->id,
-            'phone' => 'required|string',
             'address' => 'required|string',
         ]);
+        
+        $validated['phone'] = $request->input('phone', 'N/A');
 
         $customer->update($validated);
 

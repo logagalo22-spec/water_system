@@ -1,102 +1,71 @@
-<x-layouts::app title="Create Customer">
-    <div class="max-w-2xl">
-        <flux:heading class="mb-6">Create Customer</flux:heading>
+<x-layouts::app title="Register New Customer">
+    <div class="px-6 py-4 bg-[#f8f9fa] min-h-screen font-sans text-gray-700">
+        
+        <div class="flex items-center justify-between mb-6">
+            <h1 class="text-2xl font-bold text-gray-800">Register New Customer</h1>
+            <a href="{{ route('customers.index') }}" class="text-[#337ab7] hover:underline">
+                &larr; Back to Customers
+            </a>
+        </div>
 
-        <flux:card>
-            <form method="POST" action="{{ route('customers.store') }}">
+        <div class="bg-white rounded shadow-sm overflow-hidden border border-gray-200 max-w-3xl">
+            <form method="POST" action="{{ route('customers.store') }}" class="p-6">
                 @csrf
+                
+                <h3 class="text-[#337ab7] font-semibold text-base mb-6 border-b border-gray-100 pb-2">Customer Details</h3>
 
-                <flux:fieldset>
-                    <flux:field>
-                        <flux:label for="customer_id">Customer ID</flux:label>
-                        <flux:input
-                            id="customer_id"
-                            name="customer_id"
-                            type="text"
-                            required
-                            value="{{ old('customer_id') }}"
-                        />
-                        @error('customer_id')
-                            <flux:error>{{ $message }}</flux:error>
-                        @enderror
-                    </flux:field>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <div>
+                        <label class="block text-gray-600 mb-1 text-sm font-medium">Full Name <span class="text-red-500">*</span></label>
+                        <input type="text" name="name" value="{{ old('name') }}" required
+                            class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-[#42a5f5] text-gray-700 bg-[#fefefe] shadow-sm">
+                        @error('name') <span class="text-red-500 text-xs mt-1">{{ $message }}</span> @enderror
+                    </div>
 
-                    <flux:field>
-                        <flux:label for="name">Full Name</flux:label>
-                        <flux:input
-                            id="name"
-                            name="name"
-                            type="text"
-                            required
-                            value="{{ old('name') }}"
-                        />
-                        @error('name')
-                            <flux:error>{{ $message }}</flux:error>
-                        @enderror
-                    </flux:field>
-
-                    <flux:field>
-                        <flux:label for="type">Customer Type</flux:label>
-                        <flux:select
-                            id="type"
-                            name="type"
-                            required
-                        >
+                    <div>
+                        <label class="block text-gray-600 mb-1 text-sm font-medium">Customer Type <span class="text-red-500">*</span></label>
+                        <select name="type" required
+                            class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-[#42a5f5] text-gray-700 bg-[#fefefe] shadow-sm">
                             <option value="">Select Type</option>
                             <option value="Regular" {{ old('type') === 'Regular' ? 'selected' : '' }}>Regular</option>
                             <option value="Commercial" {{ old('type') === 'Commercial' ? 'selected' : '' }}>Commercial</option>
-                        </flux:select>
-                        @error('type')
-                            <flux:error>{{ $message }}</flux:error>
-                        @enderror
-                    </flux:field>
+                        </select>
+                        @error('type') <span class="text-red-500 text-xs mt-1">{{ $message }}</span> @enderror
+                    </div>
 
-                    <flux:field>
-                        <flux:label for="email">Email</flux:label>
-                        <flux:input
-                            id="email"
-                            name="email"
-                            type="email"
-                            required
-                            value="{{ old('email') }}"
-                        />
-                        @error('email')
-                            <flux:error>{{ $message }}</flux:error>
-                        @enderror
-                    </flux:field>
+                    <div>
+                        <label class="block text-gray-600 mb-1 text-sm font-medium">Email Address <span class="text-red-500">*</span></label>
+                        <input type="email" name="email" value="{{ old('email') }}" required
+                            class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-[#42a5f5] text-gray-700 bg-[#fefefe] shadow-sm">
+                        @error('email') <span class="text-red-500 text-xs mt-1">{{ $message }}</span> @enderror
+                    </div>
 
-                    <flux:field>
-                        <flux:label for="phone">Phone</flux:label>
-                        <flux:input
-                            id="phone"
-                            name="phone"
-                            type="text"
-                            required
-                            value="{{ old('phone') }}"
-                        />
-                        @error('phone')
-                            <flux:error>{{ $message }}</flux:error>
-                        @enderror
-                    </flux:field>
+                    <div>
+                        <label class="block text-gray-600 mb-1 text-sm font-medium flex justify-between">
+                            Phone Number <span class="text-gray-400 font-normal">(Optional)</span>
+                        </label>
+                        <input type="text" name="phone" value="{{ old('phone') }}"
+                            class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-[#42a5f5] text-gray-700 bg-[#fefefe] shadow-sm">
+                        @error('phone') <span class="text-red-500 text-xs mt-1">{{ $message }}</span> @enderror
+                    </div>
+                </div>
 
-                    <flux:field>
-                        <flux:label for="address">Address</flux:label>
-                        <flux:textarea
-                            id="address"
-                            name="address"
-                            required
-                        >{{ old('address') }}</flux:textarea>
-                        @error('address')
-                            <flux:error>{{ $message }}</flux:error>
-                        @enderror
-                    </flux:field>
-                </flux:fieldset>
+                <div class="mb-8">
+                    <label class="block text-gray-600 mb-1 text-sm font-medium">Home/Business Address <span class="text-red-500">*</span></label>
+                    <textarea name="address" rows="3" required
+                        class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-[#42a5f5] text-gray-700 bg-[#fefefe] shadow-sm">{{ old('address') }}</textarea>
+                    @error('address') <span class="text-red-500 text-xs mt-1">{{ $message }}</span> @enderror
+                </div>
 
-                <div class="flex gap-3 mt-6">
-                    <flux:button type="submit" variant="primary">Create Customer</flux:button>
-                    <flux:button :href="route('customers.index')" variant="ghost" wire:navigate>Cancel</flux:button>
+                <div class="flex justify-end pt-4 border-t border-gray-100">
+                    <div class="text-sm text-gray-400 mr-auto self-center">
+                        Note: The Customer No. (ID) will be automatically generated.
+                    </div>
+                    <button type="submit" class="bg-[#5cb85c] hover:bg-[#4cae4c] text-white px-6 py-2 rounded font-medium shadow-sm flex items-center gap-2">
+                        <span>Save Customer</span>
+                    </button>
                 </div>
             </form>
-        </flux:card>
+        </div>
     </div>
 </x-layouts::app>
