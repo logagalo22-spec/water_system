@@ -27,7 +27,12 @@
                         <td class="px-4 py-3">{{ $bill->billing_date->format('F Y') }}</td>
                         <td class="px-4 py-3">{{ $bill->customer->customer_number ?? $bill->customer->id }}</td>
                         <td class="px-4 py-3">{{ $bill->customer->name }}</td>
-                        <td class="px-4 py-3">{{ $bill->usage_units }} L</td>
+                        <td class="px-4 py-3">
+                            <span class="px-2 py-1 rounded text-xs font-medium text-white
+                                {{ $bill->usage_units <= 10 ? 'bg-[#5cb85c]' : ($bill->usage_units <= 20 ? 'bg-[#f0ad4e]' : 'bg-[#d9534f]') }}">
+                                {{ $bill->usage_units }} L
+                            </span>
+                        </td>
                         <td class="px-4 py-3">₱{{ number_format($bill->total_amount, 0) }}</td>
                         <td class="px-4 py-3">
                             <form action="{{ route('billing.mark-paid', $bill) }}" method="POST" class="inline">
@@ -68,7 +73,12 @@
                         <td class="px-4 py-3">{{ $bill->billing_date->format('F Y') }}</td>
                         <td class="px-4 py-3">{{ $bill->customer->customer_number ?? $bill->customer->id }}</td>
                         <td class="px-4 py-3">{{ $bill->customer->name }}</td>
-                        <td class="px-4 py-3">{{ $bill->usage_units }} L</td>
+                        <td class="px-4 py-3">
+                            <span class="px-2 py-1 rounded text-xs font-medium text-white
+                                {{ $bill->usage_units <= 10 ? 'bg-[#5cb85c]' : ($bill->usage_units <= 20 ? 'bg-[#f0ad4e]' : 'bg-[#d9534f]') }}">
+                                {{ $bill->usage_units }} L
+                            </span>
+                        </td>
                         <td class="px-4 py-3">₱{{ number_format($bill->total_amount, 0) }}</td>
                         <td class="px-4 py-3">
                             <a href="{{ route('billing.show', $bill) }}" class="text-[#337ab7] hover:underline text-sm">View</a>

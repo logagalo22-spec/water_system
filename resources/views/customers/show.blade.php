@@ -55,7 +55,10 @@
                                 <td class="px-4 py-3 text-sm">{{ $bill->billing_date->format('F Y') }}</td>
                                 <td class="px-4 py-3 text-sm">{{ $reading }}</td>
                                 <td class="px-4 py-3 text-sm">
-                                    <span class="bg-[#5bc0de] text-white px-2 py-0.5 rounded text-xs">{{ $bill->usage_units }} L</span>
+                                    <span class="text-white px-2 py-0.5 rounded text-xs 
+                                        {{ $bill->usage_units <= 10 ? 'bg-[#5cb85c]' : ($bill->usage_units <= 20 ? 'bg-[#f0ad4e]' : 'bg-[#d9534f]') }}">
+                                        {{ $bill->usage_units }} L
+                                    </span>
                                 </td>
                                 <td class="px-4 py-3 text-sm">₱{{ number_format($bill->total_amount, 0) }}</td>
                                 <td class="px-4 py-3 text-sm flex items-center justify-between">
