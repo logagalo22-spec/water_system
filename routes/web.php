@@ -5,6 +5,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\BillingController;
 use App\Http\Controllers\SettingsController;
+use App\Http\Controllers\RecoveryController;
 
 Route::redirect('/', '/dashboard')->name('home');
 
@@ -22,6 +23,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('billing/{bill}', [BillingController::class, 'show'])->name('billing.show');
     Route::patch('billing/{bill}/mark-paid', [BillingController::class, 'markAsPaid'])->name('billing.mark-paid');
     Route::delete('billing/{bill}', [BillingController::class, 'destroy'])->name('billing.destroy');
+
+    // Recovery
+    Route::get('recovery', [RecoveryController::class, 'index'])->name('recovery.index');
+    Route::post('recovery/customers/{id}', [RecoveryController::class, 'restoreCustomer'])->name('recovery.restoreCustomer');
+    Route::post('recovery/bills/{id}', [RecoveryController::class, 'restoreBill'])->name('recovery.restoreBill');
 
     // Settings
     Route::get('settings', [SettingsController::class, 'index'])->name('settings.index');

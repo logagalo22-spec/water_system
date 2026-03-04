@@ -1,213 +1,64 @@
 <x-layouts::app title="System Settings">
-    <div class="max-w-2xl">
-        <flux:heading class="mb-6">System Settings</flux:heading>
+    <div class="px-6 py-4 bg-[#f8f9fa] min-h-screen font-sans text-gray-700">
+        <h1 class="text-2xl font-bold mb-8 text-gray-800">System Settings</h1>
 
-        <flux:card>
-            <form method="POST" action="{{ route('settings.update') }}">
-                @csrf
-
-                <flux:fieldset>
-                    <flux:field>
-                        <flux:label for="base_charge">Base Charge (₱)</flux:label>
-                        <flux:input
-                            id="base_charge"
-                            name="base_charge"
-                            type="number"
-                            step="0.01"
-                            required
-                            value="{{ old('base_charge', $settings['base_charge']) }}"
-                        />
-                        <flux:text class="text-zinc-500 dark:text-zinc-400 text-sm mt-2">
-                            The fixed monthly charge for all customers
-                        </flux:text>
-                        @error('base_charge')
-                            <flux:error>{{ $message }}</flux:error>
-                        @enderror
-                    </flux:field>
-
-                    <flux:field>
-                        <flux:label for="usage_rate">Usage Rate (₱/m³)</flux:label>
-                        <flux:input
-                            id="usage_rate"
-                            name="usage_rate"
-                            type="number"
-                            step="0.01"
-                            required
-                            value="{{ old('usage_rate', $settings['usage_rate']) }}"
-                        />
-                        <flux:text class="text-zinc-500 dark:text-zinc-400 text-sm mt-2">
-                            The cost per cubic meter of water consumed
-                        </flux:text>
-                        @error('usage_rate')
-                            <flux:error>{{ $message }}</flux:error>
-                        @enderror
-                    </flux:field>
-
-                    <flux:field>
-                        <flux:label for="alert_threshold">Alert Threshold (m³)</flux:label>
-                        <flux:input
-                            id="alert_threshold"
-                            name="alert_threshold"
-                            type="number"
-                            step="0.01"
-                            required
-                            value="{{ old('alert_threshold', $settings['alert_threshold']) }}"
-                        />
-                        <flux:text class="text-zinc-500 dark:text-zinc-400 text-sm mt-2">
-                            Usage threshold for sending alerts
-                        </flux:text>
-                        @error('alert_threshold')
-                            <flux:error>{{ $message }}</flux:error>
-                        @enderror
-                    </flux:field>
-
-                    <flux:field>
-                        <flux:label for="alert_email">Alert Email Address</flux:label>
-                        <flux:input
-                            id="alert_email"
-                            name="alert_email"
-                            type="email"
-                            required
-                            value="{{ old('alert_email', $settings['alert_email']) }}"
-                        />
-                        <flux:text class="text-zinc-500 dark:text-zinc-400 text-sm mt-2">
-                            Email address for receiving system alerts
-                        </flux:text>
-                        @error('alert_email')
-                            <flux:error>{{ $message }}</flux:error>
-                        @enderror
-                    </flux:field>
-
-                    <flux:fieldset class="mt-4">
-                        <flux:heading size="sm" class="mb-2">Water Usage Color Indicators</flux:heading>
-                        <flux:text class="text-zinc-600 dark:text-zinc-300 text-sm mb-4">
-                            Configure the water usage increase thresholds that determine the color codes displayed when creating bills.
-                            Colors are based on the <strong>increase in water usage</strong> (amount above the 10L minimum).
-                        </flux:text>
-
-                        <flux:field>
-                            <flux:label>Regular Customer - Green Threshold (L)</flux:label>
-                            <flux:input
-                                id="regular_green_max"
-                                name="regular_green_max"
-                                type="number"
-                                step="1"
-                                required
-                                value="{{ old('regular_green_max', $settings['regular_green_max']) }}"
-                            />
-                            <flux:text class="text-zinc-500 dark:text-zinc-400 text-xs mt-1">
-                                🟢 Usage increase up to this amount appears in green (1 - {{ $settings['regular_green_max'] }} L)
-                            </flux:text>
-                        </flux:field>
-
-                        <flux:field>
-                            <flux:label>Regular Customer - Orange Threshold (L)</flux:label>
-                            <flux:input
-                                id="regular_orange_max"
-                                name="regular_orange_max"
-                                type="number"
-                                step="1"
-                                required
-                                value="{{ old('regular_orange_max', $settings['regular_orange_max']) }}"
-                            />
-                            <flux:text class="text-zinc-500 dark:text-zinc-400 text-xs mt-1">
-                                🟠 Usage increase in this range appears in orange ({{ intval($settings['regular_green_max']) + 1 }} - {{ $settings['regular_orange_max'] }} L)
-                            </flux:text>
-                        </flux:field>
-
-                        <flux:field>
-                            <flux:label>Commercial Customer - Green Threshold (L)</flux:label>
-                            <flux:input
-                                id="commercial_green_max"
-                                name="commercial_green_max"
-                                type="number"
-                                step="1"
-                                required
-                                value="{{ old('commercial_green_max', $settings['commercial_green_max']) }}"
-                            />
-                            <flux:text class="text-zinc-500 dark:text-zinc-400 text-xs mt-1">
-                                🟢 Usage increase up to this amount appears in green (1 - {{ $settings['commercial_green_max'] }} L)
-                            </flux:text>
-                        </flux:field>
-
-                        <flux:field>
-                            <flux:label>Commercial Customer - Orange Threshold (L)</flux:label>
-                            <flux:input
-                                id="commercial_orange_max"
-                                name="commercial_orange_max"
-                                type="number"
-                                step="1"
-                                required
-                                value="{{ old('commercial_orange_max', $settings['commercial_orange_max']) }}"
-                            />
-                            <flux:text class="text-zinc-500 dark:text-zinc-400 text-xs mt-1">
-                                🟠 Usage increase in this range appears in orange ({{ intval($settings['commercial_green_max']) + 1 }} - {{ $settings['commercial_orange_max'] }} L)
-                            </flux:text>
-                            <flux:text class="text-zinc-500 dark:text-zinc-400 text-xs mt-1">
-                                🔴 Usage increase above {{ $settings['commercial_orange_max'] }} L appears in red
-                            </flux:text>
-                        </flux:field>
-                    </flux:fieldset>
-                </flux:fieldset>
-
-                <div class="flex gap-3 mt-6">
-                    <flux:button type="submit" variant="primary">Save Settings</flux:button>
-                    <flux:button :href="route('dashboard')" variant="ghost" wire:navigate>Back</flux:button>
-                </div>
-            </form>
-        </flux:card>
-
-        <flux:card class="mt-6">
-            <flux:heading size="sm" class="mb-4">Settings Information</flux:heading>
-            <div class="space-y-4 text-sm">
-                <div>
-                    <flux:text class="font-semibold">Base Charge</flux:text>
-                    <flux:text class="text-zinc-500 dark:text-zinc-400">
-                        The fixed monthly charge applied to all water bills regardless of usage.
-                    </flux:text>
-                </div>
-                <div>
-                    <flux:text class="font-semibold">Usage Rate</flux:text>
-                    <flux:text class="text-zinc-500 dark:text-zinc-400">
-                        The cost per cubic meter of water consumed. This is multiplied by the customer's water usage to determine usage charges.
-                    </flux:text>
-                </div>
-                <div>
-                    <flux:text class="font-semibold">Alert Threshold</flux:text>
-                    <flux:text class="text-zinc-500 dark:text-zinc-400">
-                        When a customer's water usage exceeds this threshold, an alert will be sent to the alert email address.
-                    </flux:text>
-                </div>
-                <div>
-                    <flux:text class="font-semibold">Water Usage Color Indicators</flux:text>
-                    <flux:text class="text-zinc-500 dark:text-zinc-400">
-                        Color codes help administrators quickly identify high usage levels when creating bills:
-                    </flux:text>
-                    <div class="mt-2 ml-4 space-y-2">
-                        <div class="flex items-center gap-2">
-                            <span class="text-green-600 font-bold">●</span>
-                            <flux:text class="text-zinc-500 dark:text-zinc-400">
-                                <strong>Green</strong>: Normal usage (1 to green threshold)
-                            </flux:text>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <span class="text-orange-600 font-bold">●</span>
-                            <flux:text class="text-zinc-500 dark:text-zinc-400">
-                                <strong>Orange</strong>: Elevated usage (green + 1 to orange threshold)
-                            </flux:text>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <span class="text-red-600 font-bold">●</span>
-                            <flux:text class="text-zinc-500 dark:text-zinc-400">
-                                <strong>Red</strong>: High usage (above orange threshold)
-                            </flux:text>
-                        </div>
+        <form method="POST" action="{{ route('settings.update') }}">
+            @csrf
+            
+            <div class="flex flex-col md:flex-row gap-12 bg-[#ebf0f5] p-6">
+                <!-- Regular User Config -->
+                <div class="flex-1">
+                    <h3 class="text-[#337ab7] font-semibold mb-4 text-base">Regular User Config</h3>
+                    
+                    <div class="mb-4">
+                        <label class="block text-gray-600 mb-1 text-sm">Base Charge (₱)</label>
+                        <input type="number" step="0.01" name="base_charge" value="{{ old('base_charge', $settings['base_charge'] ?? 100) }}" class="w-full bg-transparent border-b border-gray-300 py-1 focus:outline-none focus:border-blue-400 text-gray-700">
                     </div>
-                    <flux:text class="text-zinc-500 dark:text-zinc-400 mt-2">
-                        Different thresholds can be configured for regular and commercial customers to reflect their typical usage patterns.
-                    </flux:text>
+                    
+                    <div class="mb-4">
+                        <label class="block text-gray-600 mb-1 text-sm">Orange Alert (L)</label>
+                        <input type="number" name="regular_orange_max" value="{{ old('regular_orange_max', $settings['regular_orange_max'] ?? 11) }}" class="w-full bg-transparent border-b border-gray-300 py-1 focus:outline-none focus:border-blue-400 text-gray-700">
+                    </div>
+                    
+                    <div class="mb-6">
+                        <label class="block text-gray-600 mb-1 text-sm">Red Alert (L)</label>
+                        <input type="number" name="regular_red_max" value="{{ old('alert_threshold', $settings['alert_threshold'] ?? 15) }}" class="w-full bg-transparent border-b border-gray-300 py-1 focus:outline-none focus:border-blue-400 text-gray-700">
+                    </div>
+                    
+                    <button type="submit" class="bg-[#337ab7] hover:bg-[#286090] text-white px-4 py-2 rounded font-medium text-sm shadow-sm">
+                        Save Configuration
+                    </button>
+                </div>
+
+                <!-- Commercial User Config -->
+                <div class="flex-1">
+                    <h3 class="text-[#337ab7] font-semibold mb-4 text-base">Commercial User Config</h3>
+                    
+                    <div class="mb-4">
+                        <label class="block text-gray-600 mb-1 text-sm">Base Charge (₱)</label>
+                        <input type="number" step="0.01" name="commercial_base_charge" value="250" class="w-full bg-transparent border-b border-gray-300 py-1 focus:outline-none focus:border-blue-400 text-gray-700">
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="block text-gray-600 mb-1 text-sm">Orange Alert (L)</label>
+                        <input type="number" name="commercial_orange_max" value="{{ old('commercial_orange_max', $settings['commercial_orange_max'] ?? 50) }}" class="w-full bg-transparent border-b border-gray-300 py-1 focus:outline-none focus:border-blue-400 text-gray-700">
+                    </div>
+                    
+                    <div class="mb-6">
+                        <label class="block text-gray-600 mb-1 text-sm">Red Alert (L)</label>
+                        <input type="number" name="commercial_red_max" value="100" class="w-full bg-transparent border-b border-gray-300 py-1 focus:outline-none focus:border-blue-400 text-gray-700">
+                    </div>
                 </div>
             </div>
-        </flux:card>
+            
+            <!-- Hidden required fields from original form to maintain compatibility -->
+            <div class="hidden">
+                <input type="number" name="usage_rate" value="{{ $settings['usage_rate'] ?? 1 }}">
+                <input type="email" name="alert_email" value="{{ $settings['alert_email'] ?? 'admin@example.com' }}">
+                <input type="number" name="alert_threshold" value="{{ $settings['alert_threshold'] ?? 15 }}">
+                <input type="number" name="regular_green_max" value="{{ $settings['regular_green_max'] ?? 10 }}">
+                <input type="number" name="commercial_green_max" value="{{ $settings['commercial_green_max'] ?? 49 }}">
+            </div>
+        </form>
     </div>
 </x-layouts::app>
