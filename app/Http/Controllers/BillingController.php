@@ -18,11 +18,23 @@ class BillingController extends Controller
         $pendingCount = Bill::where('status', 'Pending')->count();
         $totalBilled = Bill::sum('total_amount');
 
+        $thresholds = [
+            'Regular' => [
+                'green_max' => \App\Models\SystemSetting::get('regular_green_max', 12),
+                'orange_max' => \App\Models\SystemSetting::get('regular_orange_max', 14),
+            ],
+            'Commercial' => [
+                'green_max' => \App\Models\SystemSetting::get('commercial_green_max', 12),
+                'orange_max' => \App\Models\SystemSetting::get('commercial_orange_max', 14),
+            ],
+        ];
+
         return view('billing.index', [
             'bills' => $bills,
             'paidCount' => $paidCount,
             'pendingCount' => $pendingCount,
             'totalBilled' => $totalBilled,
+            'thresholds' => $thresholds,
         ]);
     }
 

@@ -9,8 +9,12 @@ use Illuminate\View\View;
 
 class DashboardController extends Controller
 {
-    public function index(): View
+    public function index(): View|\Illuminate\Http\RedirectResponse
     {
+        if (auth()->user()->role === 'consumer') {
+            return redirect()->route('messages.index');
+        }
+
         $totalCustomers = Customer::count();
         $totalRevenue = Bill::where('status', 'Paid')->sum('total_amount');
         $pendingRevenue = Bill::where('status', 'Pending')->sum('total_amount');

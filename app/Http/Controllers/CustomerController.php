@@ -104,4 +104,24 @@ class CustomerController extends Controller
         return redirect()->route('customers.index')
             ->with('success', 'Customer deleted successfully');
     }
+
+    public function createAccount(Customer $customer)
+    {
+        if ($customer->user) {
+            return back()->with('error', 'Account already exists.');
+        }
+
+        $password = \Illuminate\Support\Str::random(8);
+
+        \App\Models\User::create([
+            'name' => $customer->name,
+            'email' => $customer->email,
+            'password' => \Illuminate\Support\Facades\Hash::make($password),
+            'role' => 'consumer',
+            'customer_id' => $customer->id,
+            'email_verified_at' => now(),
+        ]);
+
+        return back()->with('success', 'Account created successfully. Default password is: ' . $password);
+    }
 }

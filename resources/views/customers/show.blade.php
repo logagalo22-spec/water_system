@@ -82,10 +82,25 @@
                 </div>
                 
                 <div class="mt-8">
-                    <h2 class="text-lg font-semibold mb-3">Register New Customer</h2>
-                    <a href="{{ route('customers.create') }}" class="bg-[#5bc0de] hover:bg-[#46b8da] text-white px-4 py-2 rounded text-sm font-medium inline-block">
-                        Create &rarr;
-                    </a>
+                    <h2 class="text-lg font-semibold mb-3">Actions</h2>
+                    <div class="space-x-2">
+                        <a href="{{ route('customers.create') }}" class="bg-[#5bc0de] hover:bg-[#46b8da] text-white px-4 py-2 rounded text-sm font-medium inline-block">
+                            Create New Customer &rarr;
+                        </a>
+
+                        @if(!$customer->user)
+                            <form action="{{ route('customers.create-account', $customer->id) }}" method="POST" class="inline-block">
+                                @csrf
+                                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded text-sm font-medium">
+                                    Create Login Account
+                                </button>
+                            </form>
+                        @else
+                            <span class="inline-block bg-green-100 text-green-800 px-4 py-2 rounded text-sm font-medium">
+                                Account Active
+                            </span>
+                        @endif
+                    </div>
                 </div>
             </div>
 

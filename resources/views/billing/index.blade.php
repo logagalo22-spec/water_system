@@ -27,9 +27,14 @@
                         <td class="px-4 py-3">{{ $bill->billing_date->format('F Y') }}</td>
                         <td class="px-4 py-3">{{ $bill->customer->customer_number ?? $bill->customer->id }}</td>
                         <td class="px-4 py-3">{{ $bill->customer->name }}</td>
+                        @php
+                            $cType = $bill->customer->type ?? 'Regular';
+                            $greenMax = $thresholds[$cType]['green_max'] ?? 12;
+                            $orangeMax = $thresholds[$cType]['orange_max'] ?? 14;
+                            $bgClass = $bill->usage_units <= $greenMax ? 'bg-[#5cb85c]' : ($bill->usage_units <= $orangeMax ? 'bg-[#f0ad4e]' : 'bg-[#d9534f]');
+                        @endphp
                         <td class="px-4 py-3">
-                            <span class="px-2 py-1 rounded text-xs font-medium text-white
-                                {{ $bill->usage_units <= 10 ? 'bg-[#5cb85c]' : ($bill->usage_units <= 20 ? 'bg-[#f0ad4e]' : 'bg-[#d9534f]') }}">
+                            <span class="px-2 py-1 rounded text-xs font-medium text-white {{ $bgClass }}">
                                 {{ $bill->usage_units }} L
                             </span>
                         </td>
@@ -73,9 +78,14 @@
                         <td class="px-4 py-3">{{ $bill->billing_date->format('F Y') }}</td>
                         <td class="px-4 py-3">{{ $bill->customer->customer_number ?? $bill->customer->id }}</td>
                         <td class="px-4 py-3">{{ $bill->customer->name }}</td>
+                        @php
+                            $cType = $bill->customer->type ?? 'Regular';
+                            $greenMax = $thresholds[$cType]['green_max'] ?? 12;
+                            $orangeMax = $thresholds[$cType]['orange_max'] ?? 14;
+                            $bgClass = $bill->usage_units <= $greenMax ? 'bg-[#5cb85c]' : ($bill->usage_units <= $orangeMax ? 'bg-[#f0ad4e]' : 'bg-[#d9534f]');
+                        @endphp
                         <td class="px-4 py-3">
-                            <span class="px-2 py-1 rounded text-xs font-medium text-white
-                                {{ $bill->usage_units <= 10 ? 'bg-[#5cb85c]' : ($bill->usage_units <= 20 ? 'bg-[#f0ad4e]' : 'bg-[#d9534f]') }}">
+                            <span class="px-2 py-1 rounded text-xs font-medium text-white {{ $bgClass }}">
                                 {{ $bill->usage_units }} L
                             </span>
                         </td>

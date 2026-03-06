@@ -155,12 +155,17 @@
             @endforeach
         };
 
+        // Store previous reading
+        let previousReading = 0;
+
         function loadCustomerHistory() {
             const customerId = document.getElementById('customer_id').value;
             const historyDiv = document.getElementById('customer-history');
 
             if (!customerId) {
                 historyDiv.innerHTML = '<div class="text-center py-6 text-zinc-500">Select a customer to view reading history</div>';
+                previousReading = 0;
+                calculateCharges();
                 return;
             }
 
@@ -169,6 +174,9 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.readings && data.readings.length > 0) {
+                        // Set previous reading for calculation
+                        previousReading = data.readings[0].usage_units;
+                        
                         let html = `
                             <div class="overflow-x-auto">
                                 <table class="w-full text-sm">
@@ -215,12 +223,16 @@
                         html += `</tbody></table></div>`;
                         historyDiv.innerHTML = html;
                     } else {
+                        previousReading = 0;
                         historyDiv.innerHTML = '<div class="text-center py-6 text-zinc-500">No reading history yet</div>';
                     }
+                    calculateCharges();
                 })
                 .catch(error => {
                     console.error('Error loading history:', error);
                     historyDiv.innerHTML = '<div class="text-center py-6 text-red-500">Error loading history</div>';
+                    previousReading = 0;
+                    calculateCharges();
                 });
         }
 
@@ -241,7 +253,10 @@
 
             const selectedOption = customerSelect.options[customerSelect.selectedIndex];
             const customerType = selectedOption.getAttribute('data-type');
-            const usage = parseFloat(usageInput.value);
+            const newReading = parseFloat(usageInput.value);
+            
+            // Calculate actual usage length
+            const usage = Math.max(newReading - previousReading, 0);
 
             // Formula: (usage - 10) * rate + baseCharge
             let baseCharge = 0;
@@ -262,7 +277,7 @@
             usageChargeInput.value = usageCharge.toFixed(2);
 
             // Show calculation breakdown and color based on thresholds
-            calculationText.textContent = `Calculation: (${usage} - 10) × ₱${rate} = ₱${usageCharge.toFixed(2)} usage charge`;
+            calculationText.textContent = `Previous: ${previousReading} | Usage: ${Math.max(newReading - previousReading, 0)} | Calculation: (${Math.max(newReading - previousReading, 0)} - 10) × ₱${rate} = ₱${usageCharge.toFixed(2)}`;
 
             // Determine color class based on usage INCREASE (billable usage)
             // The increase is the metered usage above the 10L threshold

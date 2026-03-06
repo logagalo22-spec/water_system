@@ -15,6 +15,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // Customers
     Route::resource('customers', CustomerController::class);
+    Route::post('customers/{customer}/create-account', [CustomerController::class, 'createAccount'])->name('customers.create-account');
+
+    // Messaging
+    Route::get('messages', [\App\Http\Controllers\MessageController::class, 'index'])->name('messages.index');
+    Route::post('messages', [\App\Http\Controllers\MessageController::class, 'store'])->name('messages.store');
 
     // Billing
     Route::get('billing', [BillingController::class, 'index'])->name('billing.index');

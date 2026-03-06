@@ -12,25 +12,33 @@
 
             <flux:sidebar.nav>
                 <flux:sidebar.group :heading="__('Water System')" class="grid">
-                    <flux:sidebar.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>
-                        {{ __('Dashboard') }}
-                    </flux:sidebar.item>
+                    @if(auth()->user()->role === 'admin')
+                        <flux:sidebar.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>
+                            {{ __('Dashboard') }}
+                        </flux:sidebar.item>
+                        
+                        <flux:sidebar.item icon="users" :href="route('customers.index')" :current="request()->routeIs('customers.*')" wire:navigate>
+                            {{ __('Customers') }}
+                        </flux:sidebar.item>
+                        
+                        <flux:sidebar.item icon="list-bullet" :href="route('billing.index')" :current="request()->routeIs('billing.*')" wire:navigate>
+                            {{ __('Billing Reports') }}
+                        </flux:sidebar.item>
+                        
+                        <flux:sidebar.item icon="adjustments-horizontal" :href="route('settings.index')" :current="request()->routeIs('settings.*')" wire:navigate>
+                            {{ __('Settings') }}
+                        </flux:sidebar.item>
+                    @endif
                     
-                    <flux:sidebar.item icon="users" :href="route('customers.index')" :current="request()->routeIs('customers.*')" wire:navigate>
-                        {{ __('Customers') }}
+                    <flux:sidebar.item icon="chat-bubble-left" :href="route('messages.index')" :current="request()->routeIs('messages.*')" wire:navigate>
+                        {{ __('Messages') }}
                     </flux:sidebar.item>
-                    
-                    <flux:sidebar.item icon="list-bullet" :href="route('billing.index')" :current="request()->routeIs('billing.*')" wire:navigate>
-                        {{ __('Billing Reports') }}
-                    </flux:sidebar.item>
-                    
-                    <flux:sidebar.item icon="adjustments-horizontal" :href="route('settings.index')" :current="request()->routeIs('settings.*')" wire:navigate>
-                        {{ __('Settings') }}
-                    </flux:sidebar.item>
-                    
-                    <flux:sidebar.item icon="trash" :href="route('recovery.index')" :current="request()->routeIs('recovery.*')" wire:navigate>
-                        {{ __('Recovery / Trash') }}
-                    </flux:sidebar.item>
+
+                    @if(auth()->user()->role === 'admin')
+                        <flux:sidebar.item icon="trash" :href="route('recovery.index')" :current="request()->routeIs('recovery.*')" wire:navigate>
+                            {{ __('Recovery / Trash') }}
+                        </flux:sidebar.item>
+                    @endif
                 </flux:sidebar.group>
             </flux:sidebar.nav>
 
